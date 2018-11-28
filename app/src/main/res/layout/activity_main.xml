@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textViewPrincipal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="No hay ninguna nota dada de alta, para dar de alta una nota pulsa el botón inferior."
+        android:textAllCaps="false"
+        android:textColor="?attr/colorError"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:fontFamily="@font/andada" />
+
+    <ListView
+        android:id="@+id/ListaNotas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/FloatingAniadir"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="#ff5959"
+        app:rippleColor="@android:color/background_light" />
+</LinearLayout>

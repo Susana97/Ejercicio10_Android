@@ -1,0 +1,18 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#ff5959</item>
+        <item name="colorPrimaryDark">#984a59</item>
+        <item name="colorAccent">#60424c</item>
+    </style>
+
+    <style name="ThemeSpinner">
+        <!-- Color when pressed -->
+        <item name="colorAccent">#ff5959</item>
+        <!-- Default color for the dropdown arrow and line -->
+        <item name="colorControlNormal">#60424c</item>
+    </style>z
+
+</resources>
