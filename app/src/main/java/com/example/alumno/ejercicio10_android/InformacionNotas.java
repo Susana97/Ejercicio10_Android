@@ -2,17 +2,23 @@ package com.example.alumno.ejercicio10_android;
 
 public class InformacionNotas {
 
+    private int id;
     private int icono;
     private String titulo;
     private String descripcion;
     private String tipo;
 
-    public InformacionNotas(int icono, String titulo, String descripcion, String tipo) {
+    public InformacionNotas(int id, int icono, String titulo, String descripcion, String tipo) {
+        this.id=id;
         this.icono = icono;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.tipo = tipo;
     }
+
+    public int getId() {return id;}
+
+    public void setId(int id) { this.id = id;}
 
     public int getIcono() {
         return icono;

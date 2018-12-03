@@ -18,6 +18,7 @@ import android.view.animation.Interpolator;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -105,8 +106,10 @@ public class MainActivity extends AppCompatActivity {
             listaNotas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    lanzarSegundaActividad(this, arrayNotas.get(position).getTipo(), arrayNotas.get(position).getTitulo(),
-                            arrayNotas.get(position).getDescripcion());
+                    lanzarSegundaActividad(this, arrayNotas.get(position).getId(),
+                            arrayNotas.get(position).getTipo(),
+                            arrayNotas.get(position).getTitulo(), arrayNotas.get(position).getDescripcion());
+
                 }
             });
             listaNotas.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -123,21 +126,22 @@ public class MainActivity extends AppCompatActivity {
         if (notasDB.moveToFirst() == false) {//el cursor esta vacio.
             return null;
         } else {//el cursor tiene datos.
-            mArrayList.add(new InformacionNotas(notasDB.getInt(3),
-                    notasDB.getString(1), notasDB.getString(2),
-                    notasDB.getString(0)));
+            mArrayList.add(new InformacionNotas(notasDB.getInt(0), notasDB.getInt(4),
+                    notasDB.getString(2), notasDB.getString(3),
+                    notasDB.getString(1)));
             while (notasDB.moveToNext()) {
-                mArrayList.add(new InformacionNotas(notasDB.getInt(3),
-                        notasDB.getString(1), notasDB.getString(2),
-                        notasDB.getString(0)));
+                mArrayList.add(new InformacionNotas(notasDB.getInt(0), notasDB.getInt(4),
+                        notasDB.getString(2), notasDB.getString(3),
+                        notasDB.getString(1)));
 
             }
             return mArrayList;
         }
     }
 
-    public void lanzarSegundaActividad(AdapterView.OnItemClickListener v, String tipo, String titulo, String descripcion){
+    public void lanzarSegundaActividad(AdapterView.OnItemClickListener v, int id, String tipo, String titulo, String descripcion){
         Intent i = new Intent(this, MainActivity2.class);
+        i.putExtra("id", id);
         i.putExtra("tipo", tipo);
         i.putExtra("titulo", titulo);
         i.putExtra("descripcion", descripcion);
@@ -166,14 +170,40 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item){
-        AdapterView.AdapterContextMenuInfo info= (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         switch(item.getItemId()){
             case R.id.BotonBorrar:
-                
+                adaptadorNotas.borrarNota(arrayNotas.get(info.position).getId());
+                arrayNotas.remove(info.position);
                 adaptadorListaNotas.notifyDataSetChanged();
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_CANCELED){
+            Toast toastSalir = Toast.makeText(this, "Accion Cancelada", Toast.LENGTH_SHORT);
+            toastSalir.show();
+        }else{
+            if(requestCode == SECONDARY_ACTIVITY_TAG){//si vuelve de la actividad Añadir
+                InformacionNotas notaCreada = new InformacionNotas((int)data.getLongExtra("id",-1),
+                        data.getIntExtra("imagen",-1), data.getStringExtra("titulo"),
+                        data.getStringExtra("descripcion"), data.getStringExtra("tipo"));
+
+                boolean encontrado = false;
+                for(int i=0; i<arrayNotas.size(); i++){
+                    if(arrayNotas.get(i).getId() == notaCreada.getId()){
+                        encontrado = true;
+                        arrayNotas.set(i, notaCreada);
+                    }
+                }
+                if(encontrado == false){
+                    arrayNotas.add(notaCreada);
+                }
+                adaptadorListaNotas.notifyDataSetChanged();
+            }
+        }
+    } // onActivityResult
 }

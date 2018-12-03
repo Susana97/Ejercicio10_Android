@@ -40,8 +40,7 @@ public class AdaptadorNotasDDBB {
         nuevoRegistro.put("descripcion", descripcion);
         nuevoRegistro.put("icono", icono);
 
-        baseDatos.insert("notas", null, nuevoRegistro);
-        return -1;
+        return baseDatos.insert("notas", null, nuevoRegistro);
     }
 
     //Metodo que actualiza la nota
@@ -80,7 +79,7 @@ public class AdaptadorNotasDDBB {
 
     //devuelve un cursor con la consulta con todos los registros de la BD
     public Cursor obtenerNotas(){
-        Cursor notas = baseDatos.rawQuery("SELECT categoria, titulo, descripcion, icono FROM notas",
+        Cursor notas = baseDatos.rawQuery("SELECT _id, categoria, titulo, descripcion, icono FROM notas",
                 null);
         return notas;
     }

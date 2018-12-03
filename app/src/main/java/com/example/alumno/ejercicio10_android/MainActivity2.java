@@ -23,6 +23,8 @@ public class MainActivity2 extends AppCompatActivity {
     private ArrayAdapter<String> adaptadorSppiner;
     private Button botonAceptar;
     private AdaptadorNotasDDBB adaptadorBD;
+    private boolean crear;
+    private long id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +39,20 @@ public class MainActivity2 extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         adaptadorBD = new AdaptadorNotasDDBB(this);
+        id = getIntent().getIntExtra("id", -1);
         String titulo = getIntent().getStringExtra("titulo");
-        String descripcion = getIntent().getStringExtra("descripcion");
+        final String descripcion = getIntent().getStringExtra("descripcion");
         String tipo = getIntent().getStringExtra("tipo");
         ETtitulo = (EditText)findViewById(R.id.editTextTitulo);
         ETdescripcion = (EditText)findViewById(R.id.editTextDesc);
         ETtitulo.setText(titulo);
         ETdescripcion.setText(descripcion);
+
+        if(titulo == null || titulo.isEmpty()){
+            crear = true;
+        }else{
+            crear = false;
+        }
 
         final String [] tipos =  new String []{"AVISO", "REUNION", "VARIOS"};
         adaptadorSppiner = new ArrayAdapter<String>(this,
@@ -69,11 +78,26 @@ public class MainActivity2 extends AppCompatActivity {
             public void onClick(View view) {
                 String uri = "@drawable/" + (tipos[spinerTipo.getSelectedItemPosition()]).toLowerCase();
                 int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-                adaptadorBD.crearNota(tipos[spinerTipo.getSelectedItemPosition()],
-                        ETtitulo.getText().toString(), ETdescripcion.getText().toString(), imageResource);
-                Toast toastCreado = Toast.makeText(getApplicationContext(),"Nota creada.", Toast.LENGTH_SHORT);
-                toastCreado.show();
+
+                if(crear == true){
+                    id = adaptadorBD.crearNota(tipos[spinerTipo.getSelectedItemPosition()],
+                            ETtitulo.getText().toString(), ETdescripcion.getText().toString(), imageResource);
+                    Toast toastCreado = Toast.makeText(getApplicationContext(),"Nota creada.", Toast.LENGTH_SHORT);
+                    toastCreado.show();
+                }else{
+                    adaptadorBD.actualizarNota((int)id, tipos[spinerTipo.getSelectedItemPosition()],
+                            ETtitulo.getText().toString(), ETdescripcion.getText().toString(),
+                            imageResource);
+                    Toast toastModificado = Toast.makeText(getApplicationContext(),"Nota actualizada.", Toast.LENGTH_SHORT);
+                    toastModificado.show();
+                }
+
                 Intent i2 = new Intent();
+                i2.putExtra("id", id);
+                i2.putExtra("tipo", tipos[spinerTipo.getSelectedItemPosition()].toString());
+                i2.putExtra("titulo", ETtitulo.getText().toString());
+                i2.putExtra("descripcion", ETdescripcion.getText().toString());
+                i2.putExtra("imagen", imageResource);
                 setResult(RESULT_OK, i2);
                 finish();
             }
