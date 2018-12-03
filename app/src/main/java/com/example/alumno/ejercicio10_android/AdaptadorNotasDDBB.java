@@ -17,11 +17,13 @@ public class AdaptadorNotasDDBB {
 
     public AdaptadorNotasDDBB(Context context){
         this.contexto = context;
+        bdHelper = new SQLiteHelper(contexto, "notas.db", null, 1);
     }
 
     //Metodo que abre la base de datos.
-    public SQLiteHelper abrir() throws SQLException{
-        return null;
+    public SQLiteDatabase abrir() throws SQLException{
+        baseDatos = bdHelper.getWritableDatabase();
+        return baseDatos;
     }
 
     //metodo que cierra la base de datos.
@@ -38,7 +40,7 @@ public class AdaptadorNotasDDBB {
         nuevoRegistro.put("descripcion", descripcion);
         nuevoRegistro.put("icono", icono);
 
-        baseDatos.insert("NOTAS", null, nuevoRegistro);
+        baseDatos.insert("notas", null, nuevoRegistro);
         return -1;
     }
 
@@ -66,26 +68,26 @@ public class AdaptadorNotasDDBB {
                 }
             }
         }
-        baseDatos.update("NOTAS", registroModificar, "_id=" + _id, null);
+        baseDatos.update("notas", registroModificar, "_id=" + _id, null);
         return true;
     }
 
     //metodo que borra la nota.
     public boolean borrarNota(long id){
-        baseDatos.delete("NOTAS", "_id=" + id, null);
+        baseDatos.delete("notas", "_id=" + id, null);
         return true;
     }
 
     //devuelve un cursor con la consulta con todos los registros de la BD
     public Cursor obtenerNotas(){
-        Cursor notas = baseDatos.rawQuery(" SELECT categoria, titulo, descripcion, " +
-                "icono FROM NOTAS", null);
+        Cursor notas = baseDatos.rawQuery("SELECT categoria, titulo, descripcion, icono FROM notas",
+                null);
         return notas;
     }
 
     //devuelve una nota de la base de datos.
     public Cursor getNota(long id) throws SQLException{
-        Cursor notasPorId = baseDatos.rawQuery(" SELECT categoria, titulo, descripcion, icono FROM NOTAS" +
+        Cursor notasPorId = baseDatos.rawQuery("SELECT categoria, titulo, descripcion, icono FROM notas" +
                 " WHERE _id=" + id, null);
         return notasPorId;
     }

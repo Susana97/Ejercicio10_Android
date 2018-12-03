@@ -49,7 +49,7 @@ public class InformacionNotas {
     @Override
     public String toString() {
         return "InformacionNotas{" +
-                "icono=" + icono +
+                "icono = '" + icono + '\''+
                 ", titulo='" + titulo + '\'' +
                 ", descripcion='" + descripcion + '\'' +
                 ", tipo='" + tipo + '\'' +
